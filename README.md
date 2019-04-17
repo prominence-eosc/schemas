@@ -1,2 +1,2 @@
-# schemas
-Definitions of the job and workflow schemas used
+# PROMINENCE schema and APIs
+Here we define the schema and APIs used by PROMINENCE.
