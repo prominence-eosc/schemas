@@ -1,0 +1,288 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: |
+    This is the specification of the PROMINENCE REST API. This is still considered a work in progress, so things could change or break with every update.
+  version: "1.0.0"
+  title: PROMINENCE REST API 
+tags:
+  - name: jobs
+    description: The Jobs API endpoint is for managing jobs
+  - name: workflows
+    description: The Workflows API endpoint is for managing workflows 
+paths:
+  /jobs:
+    post:
+      tags:
+        - jobs
+      summary: Create a job
+      operationId: addJob
+      responses:
+        '405':
+          description: Invalid input
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+      requestBody:
+        $ref: '#/components/requestBodies/Pet'
+    get:
+      tags:
+        - jobs
+      summary: List jobs
+      description: Returns a list of jobs
+      operationId: getPetById
+      parameters:
+        - name: jobId
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+      security:
+        - api_key: []        
+  '/jobs/{id}':
+    get:
+      tags:
+        - jobs
+      summary: Describe a job
+      description: Returns a single pet
+      operationId: getPetById
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+      security:
+        - api_key: []
+    delete:
+      tags:
+        - jobs
+      summary: Deletes a job
+      operationId: deletePet
+      parameters:
+        - name: api_key
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: Pet id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /workflows:
+    post:
+      tags:
+        - workflows
+      summary: Create workflow
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      responses:
+        default:
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: Created user object
+        required: true
+    get:
+      tags:
+        - workflows
+      summary: List workflows
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched. Use user1 for testing.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found        
+  '/workflows/{id}':
+    get:
+      tags:
+        - workflows
+      summary: Describes a workflow
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched. Use user1 for testing.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - workflows
+      summary: Delete a workflow
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+externalDocs:
+  description: Find out more about PROMINENCE
+  url: 'https://prominence-eosc.github.io/docs'
+components:
+  schemas:
+    Job:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Job name
+        resources:
+          type: Resources
+          description: Requested resources
+        tasks:
+          type: string
+          description: List of tasks
+        storage:
+          type: Storage
+          description: Requested storage          
+      xml:
+        name: Job 
+    Resources:
+      type: object
+      properties:
+        cpus:
+          type: integer
+          format: int32
+          description: Requested number of CPUs
+        memory:
+          type: integer
+          format: int32
+          description: Requested memory in GB
+        disk:
+          type: integer
+          format: int32
+          description: Requested local disk in GB
+        nodes:
+          type: string
+          format: int32
+          description: Requested number of nodes
+      xml:
+        name: Resources
+    Task:
+      type: object
+      properties:
+        image:
+          type: string
+          description: Container image
+        runtime:
+          type: string
+          description: Container runtime
+          enum:
+            - singularity
+            - udocker
+        cmd:
+          type: string
+          description: Command to execute
+        workdir:
+          type: string
+          description: Current working directory
+        type:
+          type: string
+          description: Task type
+          enum:
+            - basic
+            - openmpi
+            - mpich
+      xml:
+        name: Task
+    Storage:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Storage type
+          enum:
+            - b2drop
+            - onedata
+        mountpoint:
+          type: string
+          description: Mountpoint inside container
+      xml:
+        name: Storage
