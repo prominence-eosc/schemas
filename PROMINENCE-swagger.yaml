@@ -9,7 +9,9 @@ tags:
   - name: jobs
     description: The Jobs API endpoint is for managing jobs
   - name: workflows
-    description: The Workflows API endpoint is for managing workflows 
+    description: The Workflows API endpoint is for managing workflows
+  - name: data
+    description: The Data API endpoint for managing data
 paths:
   /jobs:
     post:
@@ -18,8 +20,12 @@ paths:
       summary: Create a job
       operationId: addJob
       responses:
-        '405':
-          description: Invalid input
+        '201':
+          description: Success       
+        '400':
+          description: Invalid input     
+        '401':
+          description: Authentication failure
       security:
         - jobs_auth:
             - 'write:jobs'
@@ -41,6 +47,8 @@ paths:
                 $ref: '#/components/schemas/Job'
         '400':
           description: Invalid ID supplied
+        '401':
+          description: Authentication failure
         '404':
           description: Job not found
       security:
@@ -69,6 +77,8 @@ paths:
                 $ref: '#/components/schemas/Job'
         '400':
           description: Invalid ID supplied
+        '401':
+          description: Authentication failure
         '404':
           description: Job not found
       security:
@@ -92,15 +102,83 @@ paths:
             type: integer
             format: int64
       responses:
+        '200':
+          description: Success     
         '400':
           description: Invalid ID supplied
+        '401':
+          description: Authentication failure   
         '404':
           description: Job not found
       security:
         - petstore_auth:
             - 'write:jobs'
-            - 'read:jobs'
-  /workflows:
+            - 'read:jobs'        
+  '/jobs/{id}/stdout':
+    get:
+      tags:
+        - jobs
+      summary: Get standard output from  a job
+      description: Returns a single pet
+      operationId: getJobById
+      parameters:
+        - name: id
+          in: path
+          description: ID of job to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          description: Job does not exist
+        '401':
+          description: Authentication failure
+        '403':
+          description: Not authorised to access this job       
+        '404':
+          description: Standard output does not exist
+      security:
+        - api_key: []      
+  '/jobs/{id}/stderr':
+    get:
+      tags:
+        - jobs
+      summary: Get standard error from  a job
+      description: Returns a single pet
+      operationId: getJobById
+      parameters:
+        - name: id
+          in: path
+          description: ID of job to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          description: Job does not exist
+        '401':
+          description: Authentication failure
+        '403':
+          description: Not authorised to access this job       
+        '404':
+          description: Standard output does not exist
+      security:
+        - api_key: []             
+  '/workflows':
     post:
       tags:
         - workflows
@@ -138,6 +216,8 @@ paths:
                 $ref: '#/components/schemas/Workflow'
         '400':
           description: Invalid username supplied
+        '401':
+          description: Authentication failure   
         '404':
           description: User not found        
   '/workflows/{id}':
@@ -162,6 +242,8 @@ paths:
                 $ref: '#/components/schemas/Workflow'
         '400':
           description: Invalid username supplied
+        '401':
+          description: Authentication failure   
         '404':
           description: User not found
     delete:
@@ -180,8 +262,27 @@ paths:
       responses:
         '400':
           description: Invalid username supplied
+        '401':
+          description: Authentication failure   
         '404':
           description: User not found
+  '/data/upload':
+    post:
+      tags:
+        - data
+      summary: Obtain a presigned URL 
+      operationId: uploadFile
+      responses:
+        '401':
+          description: Authentication failure      
+        '405':
+          description: Invalid input
+      security:
+        - jobs_auth:
+            - 'write:jobs'
+            - 'read:jobs'
+      requestBody:
+        $ref: '#/components/requestBodies/Job'          
 externalDocs:
   description: Find out more about PROMINENCE
   url: 'https://prominence-eosc.github.io/docs'
