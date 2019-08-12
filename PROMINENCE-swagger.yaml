@@ -28,8 +28,6 @@ paths:
           description: Invalid job description    
         '401':
           description: Authentication failure
-      requestBody:
-        $ref: '#/components/requestBodies/Job'
     get:
       tags:
         - jobs
@@ -112,9 +110,9 @@ paths:
         '200':
           description: Success
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: '#/components/schemas/Job'
+                type: string
         '400':
           description: Job does not exist
         '401':
@@ -141,9 +139,9 @@ paths:
         '200':
           description: Success
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: '#/components/schemas/Job'
+                type: string
         '400':
           description: Job does not exist
         '401':
@@ -255,8 +253,6 @@ paths:
           description: Authentication failure      
         '405':
           description: Invalid input
-      requestBody:
-        $ref: '#/components/requestBodies/Job' 
     get:
       tags:
         - data
@@ -313,10 +309,7 @@ components:
           description: Requested resources
         tasks:
           type: string
-          description: List of tasks
-        storage:
-          type: Storage
-          description: Requested storage          
+          description: List of tasks      
       xml:
         name: Job 
     Resources:
@@ -365,19 +358,6 @@ components:
             - basic
             - openmpi
             - mpich
+            - intelmpi
       xml:
         name: Task
-    Storage:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Storage type
-          enum:
-            - b2drop
-            - onedata
-        mountpoint:
-          type: string
-          description: Mountpoint inside container
-      xml:
-        name: Storage
