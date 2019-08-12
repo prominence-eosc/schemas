@@ -9,11 +9,11 @@ info:
   
 tags:
   - name: jobs
-    description: The Jobs API endpoint is for managing jobs
+    description: API endpoint for managing jobs
   - name: workflows
-    description: The Workflows API endpoint is for managing workflows
+    description: API endpoint for managing workflows
   - name: data
-    description: The Data API endpoint is for managing data
+    description: API endpoint for managing data
     
 paths:
   /jobs:
@@ -25,13 +25,9 @@ paths:
         '201':
           description: Success       
         '400':
-          description: Invalid input     
+          description: Invalid job description    
         '401':
           description: Authentication failure
-      security:
-        - jobs_auth:
-            - 'write:jobs'
-            - 'read:jobs'
       requestBody:
         $ref: '#/components/requestBodies/Job'
     get:
@@ -46,14 +42,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Job'
-        '400':
-          description: Invalid ID supplied
         '401':
           description: Authentication failure
-        '404':
-          description: Job not found
-      security:
-        - api_key: []        
   '/jobs/{id}':
     get:
       tags:
@@ -76,23 +66,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/Job'
         '400':
-          description: Invalid ID supplied
+          description: Invalid job ID provided                
         '401':
           description: Authentication failure
         '404':
           description: Job not found
-      security:
-        - api_key: []
     delete:
       tags:
         - jobs
-      summary: Deletes a job
+      summary: Delete a job
       parameters:
-        - name: api_key
-          in: header
-          required: false
-          schema:
-            type: string
         - name: id
           in: path
           description: Job id to delete
@@ -104,15 +87,13 @@ paths:
         '200':
           description: Success     
         '400':
-          description: Invalid ID supplied
+          description: Invalid job ID supplied
         '401':
           description: Authentication failure   
+        '403':
+          description: Not authorised to kill this job     
         '404':
           description: Job not found
-      security:
-        - petstore_auth:
-            - 'write:jobs'
-            - 'read:jobs'        
   '/jobs/{id}/stdout':
     get:
       tags:
@@ -142,8 +123,6 @@ paths:
           description: Not authorised to access this job       
         '404':
           description: Standard output does not exist
-      security:
-        - api_key: []      
   '/jobs/{id}/stderr':
     get:
       tags:
@@ -173,14 +152,12 @@ paths:
           description: Not authorised to access this job       
         '404':
           description: Standard output does not exist
-      security:
-        - api_key: []             
   '/workflows':
     post:
       tags:
         - workflows
-      summary: Create workflow
-      description: Create workflow
+      summary: Create a workflow
+      description: Create a workflow
       parameters:
         - name: id
           in: path
@@ -217,24 +194,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Workflow'
-        '400':
-          description: Invalid username supplied
         '401':
           description: Authentication failure   
-        '404':
-          description: User not found        
   '/workflows/{id}':
     get:
       tags:
         - workflows
-      summary: Describes a workflow
+      summary: Describe a workflow
       parameters:
-        - name: username
-          in: path
-          description: The name that needs to be fetched. Use user1 for testing.
-          required: true
-          schema:
-            type: string
         - name: id
           in: path
           description: ID of job to return
@@ -250,56 +217,89 @@ paths:
               schema:
                 $ref: '#/components/schemas/Workflow'
         '400':
-          description: Invalid username supplied
+          description: Invalid workflow ID provided                
         '401':
-          description: Authentication failure   
+          description: Authentication failure
         '404':
-          description: User not found
+          description: Workflow not found
     delete:
       tags:
         - workflows
       summary: Delete a workflow
-      description: This can only be done by the logged in user.
       parameters:
-        - name: username
-          in: path
-          description: The name that needs to be deleted
-          required: true
-          schema:
-            type: string
         - name: id
           in: path
-          description: ID of job to return
+          description: Workflow id to delete
           required: true
           schema:
             type: integer
             format: int64               
       responses:
+        '200':
+          description: Success     
         '400':
-          description: Invalid username supplied
+          description: Invalid workflow ID supplied
         '401':
           description: Authentication failure   
+        '403':
+          description: Not authorised to kill this workflow   
         '404':
-          description: User not found
-  '/data/upload':
+          description: Workflow not found
+  '/data':
     post:
       tags:
         - data
-      summary: Obtain a presigned URL 
+      summary: Obtain a presigned URL for uploading data
       responses:
         '401':
           description: Authentication failure      
         '405':
           description: Invalid input
-      security:
-        - jobs_auth:
-            - 'write:jobs'
-            - 'read:jobs'
       requestBody:
-        $ref: '#/components/requestBodies/Job'          
+        $ref: '#/components/requestBodies/Job' 
+    get:
+      tags:
+        - data
+      summary: List files in object storage
+      description: List files in object storage
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '401':
+          description: Authentication failure
+        '403':
+          description: Not authorised to access this path 
+    delete:
+      tags:
+        - data
+      summary: Delete file in object storage
+      parameters:
+        - name: object name
+          in: path
+          description: Object name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success     
+        '400':
+          description: Invalid object name supplied
+        '401':
+          description: Authentication failure   
+        '403':
+          description: Not authorised to delete this object   
+        '404':
+          description: Object not found
+          
 externalDocs:
   description: Find out more about PROMINENCE
   url: 'https://prominence-eosc.github.io/docs'
+  
 components:
   schemas:
     Job:
