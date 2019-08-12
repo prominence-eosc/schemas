@@ -1,2 +1,2 @@
-# PROMINENCE schema and APIs
-Here we define the schema and APIs used by PROMINENCE.
+# The PROMINENCE API
+The PROMINENCE API is documented using [OpenAPI](https://swagger.io/docs/specification/about/).
