@@ -2,23 +2,25 @@ openapi: 3.0.0
 servers: []
 info:
   description: |
-    This is the specification of the PROMINENCE REST API. This is still considered a work in progress, so things could change or break with every update.
-  version: "1.0.0"
+    This is the specification of the PROMINENCE REST API.
+    This is still considered a work in progress, so things could change or break with every update.
+  version: 1.0.0
   title: PROMINENCE REST API 
+  
 tags:
   - name: jobs
     description: The Jobs API endpoint is for managing jobs
   - name: workflows
     description: The Workflows API endpoint is for managing workflows
   - name: data
-    description: The Data API endpoint for managing data
+    description: The Data API endpoint is for managing data
+    
 paths:
   /jobs:
     post:
       tags:
         - jobs
       summary: Create a job
-      operationId: addJob
       responses:
         '201':
           description: Success       
@@ -37,7 +39,6 @@ paths:
         - jobs
       summary: List jobs
       description: Returns a list of jobs
-      operationId: getJobs
       responses:
         '200':
           description: successful operation
@@ -58,8 +59,7 @@ paths:
       tags:
         - jobs
       summary: Describe a job
-      description: Returns a single pet
-      operationId: getJobById
+      description: Describe a job
       parameters:
         - name: id
           in: path
@@ -87,7 +87,6 @@ paths:
       tags:
         - jobs
       summary: Deletes a job
-      operationId: deleteJob
       parameters:
         - name: api_key
           in: header
@@ -118,9 +117,8 @@ paths:
     get:
       tags:
         - jobs
-      summary: Get standard output from  a job
-      description: Returns a single pet
-      operationId: getJobById
+      summary: Get standard output from a job
+      description: Get standard output from a job
       parameters:
         - name: id
           in: path
@@ -150,9 +148,8 @@ paths:
     get:
       tags:
         - jobs
-      summary: Get standard error from  a job
-      description: Returns a single pet
-      operationId: getJobById
+      summary: Get standard error from a job
+      description: Get standard error from a job
       parameters:
         - name: id
           in: path
@@ -183,8 +180,15 @@ paths:
       tags:
         - workflows
       summary: Create workflow
-      description: This can only be done by the logged in user.
-      operationId: createUser
+      description: Create workflow
+      parameters:
+        - name: id
+          in: path
+          description: ID of job to return
+          required: true
+          schema:
+            type: integer
+            format: int64      
       responses:
         default:
           description: successful operation
@@ -199,7 +203,6 @@ paths:
       tags:
         - workflows
       summary: List workflows
-      operationId: getUserByName
       parameters:
         - name: username
           in: path
@@ -225,7 +228,6 @@ paths:
       tags:
         - workflows
       summary: Describes a workflow
-      operationId: getUserByName
       parameters:
         - name: username
           in: path
@@ -233,6 +235,13 @@ paths:
           required: true
           schema:
             type: string
+        - name: id
+          in: path
+          description: ID of job to return
+          required: true
+          schema:
+            type: integer
+            format: int64            
       responses:
         '200':
           description: successful operation
@@ -251,7 +260,6 @@ paths:
         - workflows
       summary: Delete a workflow
       description: This can only be done by the logged in user.
-      operationId: deleteUser
       parameters:
         - name: username
           in: path
@@ -259,6 +267,13 @@ paths:
           required: true
           schema:
             type: string
+        - name: id
+          in: path
+          description: ID of job to return
+          required: true
+          schema:
+            type: integer
+            format: int64               
       responses:
         '400':
           description: Invalid username supplied
@@ -271,7 +286,6 @@ paths:
       tags:
         - data
       summary: Obtain a presigned URL 
-      operationId: uploadFile
       responses:
         '401':
           description: Authentication failure      
