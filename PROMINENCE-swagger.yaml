@@ -159,7 +159,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of job to return
+          description: ID of workflow to return
           required: true
           schema:
             type: integer
@@ -178,13 +178,7 @@ paths:
       tags:
         - workflows
       summary: List workflows
-      parameters:
-        - name: username
-          in: path
-          description: The name that needs to be fetched. Use user1 for testing.
-          required: true
-          schema:
-            type: string
+      description: Returns a list of workflows
       responses:
         '200':
           description: Success
