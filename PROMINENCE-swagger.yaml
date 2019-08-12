@@ -41,7 +41,7 @@ paths:
       description: Returns a list of jobs
       responses:
         '200':
-          description: successful operation
+          description: Success
           content:
             application/json:
               schema:
@@ -70,7 +70,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: successful operation
+          description: Success
           content:
             application/json:
               schema:
@@ -129,7 +129,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: successful operation
+          description: Success
           content:
             application/json:
               schema:
@@ -160,7 +160,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: successful operation
+          description: Success
           content:
             application/json:
               schema:
@@ -191,7 +191,7 @@ paths:
             format: int64      
       responses:
         default:
-          description: successful operation
+          description: Success
       requestBody:
         content:
           application/json:
@@ -212,7 +212,7 @@ paths:
             type: string
       responses:
         '200':
-          description: successful operation
+          description: Success
           content:
             application/json:
               schema:
@@ -244,7 +244,7 @@ paths:
             format: int64            
       responses:
         '200':
-          description: successful operation
+          description: Success
           content:
             application/json:
               schema:
