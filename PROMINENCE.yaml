@@ -310,6 +310,11 @@ components:
         name:
           type: string
           description: Job name
+        labels:
+          description: Labels
+          type: object
+          additionalProperties:
+            type: string          
         resources:
           type: object
           properties:
@@ -327,12 +332,20 @@ components:
               type: integer
               format: int32
               description: Requested local disk in GB
-              minimum: 10
+              minimum: 1
             nodes:
               type: integer
               format: int32
               description: Requested number of nodes
               minimum: 1
+            walltime:
+              type: integer
+              format: int32
+              description: Requested walltime in mins
+              minimum: 1              
+          required:
+          - cpus
+          - memory
         tasks:
           type: array
           items:
@@ -354,7 +367,7 @@ components:
             - udocker
         cmd:
           type: string
-          description: Command to execute
+          description: Command to execute and any required arguments. If `cmd` is not provided the container's `ENTRYPOINT` will be used.
         workdir:
           type: string
           description: Current working directory
@@ -371,5 +384,13 @@ components:
             - openmpi
             - mpich
             - intelmpi
+        procsPerNode:
+          type: integer
+          format: int32
+          description: Processes to run per node for MPI jobs
+          minimum: 1      
+      required:
+      - image
+      - runtime
       xml:
         name: Task
