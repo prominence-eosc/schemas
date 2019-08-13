@@ -323,26 +323,33 @@ components:
               format: int32
               description: Requested number of CPUs
               minimum: 1
+              example: 1
             memory:
               type: integer
               format: int32
               description: Requested memory in GB
               minimum: 1
+              example: 1
             disk:
               type: integer
               format: int32
               description: Requested local disk in GB
               minimum: 1
+              example: 10
             nodes:
               type: integer
               format: int32
               description: Requested number of nodes
               minimum: 1
+              default: 1
+              example: 1
             walltime:
               type: integer
               format: int32
               description: Requested walltime in mins
               minimum: 1              
+              default: 720
+              example: 720
           required:
           - cpus
           - memory
@@ -359,12 +366,14 @@ components:
         image:
           type: string
           description: Container image
+          example: alahiff/testpi
         runtime:
           type: string
           description: Container runtime
           enum:
             - singularity
             - udocker
+          example: singularity
         cmd:
           type: string
           description: Command to execute and any required arguments. If `cmd` is not provided the container's `ENTRYPOINT` will be used.
@@ -387,8 +396,9 @@ components:
         procsPerNode:
           type: integer
           format: int32
-          description: Processes to run per node for MPI jobs
-          minimum: 1      
+          description: Processes to run per node for MPI jobs. By default the number of processes to run per node is the same as the number of CPUs per node. Setting `procsPerNode` is useful for situations where a different number of processes is required per node compared to the number of CPUs available per node, for example hybrid MPI-OpenMP jobs.
+          minimum: 1     
+          example: 1
       required:
       - image
       - runtime
