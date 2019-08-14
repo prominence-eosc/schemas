@@ -272,6 +272,76 @@ paths:
           description: Not authorised to kill this workflow   
         '404':
           description: Workflow not found
+  '/workflows/{id}/{name}/stdout':
+    get:
+      tags:
+        - workflows
+      summary: Get standard output from a job
+      description: Get standard output from a job
+      parameters:
+        - name: id
+          in: path
+          description: Workflow id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: name
+          in: path
+          description: Job name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Job does not exist
+        '401':
+          description: Authentication failure
+        '403':
+          description: Not authorised to access this job       
+        '404':
+          description: Standard output does not exist          
+  '/workflows/{id}/{name}/stderr':
+    get:
+      tags:
+        - workflows
+      summary: Get standard error from a job
+      description: Get standard error from a job
+      parameters:
+        - name: id
+          in: path
+          description: Workflow id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: name
+          in: path
+          description: Job name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Job does not exist
+        '401':
+          description: Authentication failure
+        '403':
+          description: Not authorised to access this job       
+        '404':
+          description: Standard output does not exist               
   '/data':
     post:
       tags:
