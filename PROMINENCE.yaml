@@ -1,5 +1,4 @@
 openapi: 3.0.0
-servers: []
 info:
   description: |
     This is the specification of the PROMINENCE REST API.
@@ -14,6 +13,8 @@ tags:
     description: API endpoint for managing workflows
   - name: data
     description: API endpoint for managing data
+  - name: accounting
+    description: API endpoint for obtaining accounting information 
     
 paths:
   /jobs:
@@ -30,7 +31,15 @@ paths:
               $ref: '#/components/schemas/Job'
       responses:
         '201':
-          description: Success       
+          description: Success   
+          content:
+            application/json:
+              schema:  
+                type: object
+                properties:
+                  id:
+                    type: integer           
+                    description: Job id
         '400':
           description: Invalid job description    
         '401':
@@ -81,7 +90,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Job'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
         '400':
           description: Invalid job ID provided                
         '401':
@@ -188,8 +199,20 @@ paths:
             type: integer
             format: int64      
       responses:
-        default:
-          description: Success
+        '201':
+          description: Success   
+          content:
+            application/json:
+              schema:  
+                type: object
+                properties:
+                  id:
+                    type: integer  
+                    description: Workflow id
+        '400':
+          description: Invalid workflow description    
+        '401':
+          description: Authentication failure
       requestBody:
         content:
           application/json:
@@ -282,6 +305,22 @@ paths:
       responses:
         '200':
           description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Object name
+                    size:
+                      type: integer
+                      description: Size in bytes
+                    lastModified:
+                      type: integer
+                      description: Last modification date in seconds since the UNIX epoch   
         '401':
           description: Authentication failure
         '403':
@@ -312,7 +351,7 @@ paths:
     get:
       tags:
         - data
-      summary: Get a presigned URL for downloading an existing file
+      summary: Get a presigned URL for downloading a file
       parameters:
         - name: name
           in: path
@@ -357,6 +396,8 @@ components:
           items:
             $ref: '#/components/schemas/Job'
           description: List of jobs     
+      required:
+      - jobs
       xml:
         name: Workflow            
     Job:
