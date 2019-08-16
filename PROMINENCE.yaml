@@ -452,6 +452,7 @@ components:
   schemas:
     Workflow:
       type: object
+      description: Workflow definition
       properties:
         name:
           type: string
@@ -479,6 +480,7 @@ components:
         name: Workflow            
     Job:
       type: object
+      description: Job definition
       properties:
         name:
           type: string
@@ -556,6 +558,7 @@ components:
         name: Job 
     Task:
       type: object
+      description: Task definition
       properties:
         image:
           type: string
