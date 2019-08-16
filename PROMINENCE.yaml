@@ -466,6 +466,13 @@ components:
           items:
             $ref: '#/components/schemas/Job'
           description: List of jobs     
+        numberOfRetries:
+          type: integer
+          format: int32
+          description: Number of retries if a job fails
+          minimum: 0
+          default: 0
+          example: 1
       required:
       - jobs
       xml:
@@ -519,11 +526,20 @@ components:
           required:
           - cpus
           - memory
+        numberOfRetries:
+          type: integer
+          format: int32
+          description: Number of retries if a task fails
+          minimum: 0
+          default: 0
+          example: 1              
         tasks:
           type: array
           items:
             $ref: '#/components/schemas/Task'
           description: List of tasks      
+        policies:
+          $ref: '#/components/schemas/Policy'
       xml:
         name: Job 
     Task:
@@ -570,3 +586,19 @@ components:
       - runtime
       xml:
         name: Task
+    Policy:
+      type: object
+      properties:
+        maximumRetries:
+          type: integer
+          format: int32
+          description: The maximum number of times a task should be retried upon failure.      
+        maximumTimeInQueue:
+          type: integer
+          format: int32
+          description: The maxmimum time a job should remain in the queue while waiting for resources to become available.
+        preemptible:
+          type: boolean
+          description: Specifies if the job is preemptible or not.
+      xml:
+        name: Policy        
