@@ -539,7 +539,19 @@ components:
             $ref: '#/components/schemas/Task'
           description: List of tasks      
         policies:
-          $ref: '#/components/schemas/Policy'
+          type: object
+          properties:
+            maximumRetries:
+              type: integer
+              format: int32
+              description: The maximum number of times a task should be retried upon failure.      
+            maximumTimeInQueue:
+              type: integer
+              format: int32
+              description: The maxmimum time a job should remain in the queue while waiting for resources to become available.
+            preemptible:
+              type: boolean
+              description: Specifies if the job is preemptible or not.          
       xml:
         name: Job 
     Task:
@@ -586,19 +598,4 @@ components:
       - runtime
       xml:
         name: Task
-    Policy:
-      type: object
-      properties:
-        maximumRetries:
-          type: integer
-          format: int32
-          description: The maximum number of times a task should be retried upon failure.      
-        maximumTimeInQueue:
-          type: integer
-          format: int32
-          description: The maxmimum time a job should remain in the queue while waiting for resources to become available.
-        preemptible:
-          type: boolean
-          description: Specifies if the job is preemptible or not.
-      xml:
-        name: Policy        
+ 
