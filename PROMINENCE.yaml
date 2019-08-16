@@ -466,13 +466,13 @@ components:
           items:
             $ref: '#/components/schemas/Job'
           description: List of jobs     
-        numberOfRetries:
-          type: integer
-          format: int32
-          description: Number of retries if a job fails
-          minimum: 0
-          default: 0
-          example: 1
+        policies:
+          type: object
+          properties:
+            maximumRetries:
+              type: integer
+              format: int32
+              description: The maximum number of times a job should be retried upon failure.    
       required:
       - jobs
       xml:
